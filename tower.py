@@ -2,17 +2,27 @@ import pygame.midi
 import sys
 import Tkinter as tk
 import keypress
+import threading
+import Queue
+
+q = Queue.Queue()
 
 ## FUNCTIONS
+def worker():
+	while True:
+		item = q.get()
+		keypress.keys(str(item))
+		q.task_done()
 
 def midiloop():
 	if root.poll:
 		keys = []
 		if inp.poll():
 			rawkey = inp.read(1000)
-			print(rawkey)
+			#print(rawkey)
 			if str(rawkey[0][0][0]) == "144":
-				keypress.keys(str(rawkey[0][0][1]))
+				q.put(rawkey[0][0][1])
+				#keypress.keys(str(rawkey[0][0][1]))
 		pygame.time.wait(1)
 		root.after(0, midiloop)
 	else:
@@ -41,6 +51,11 @@ root.geometry('330x30')
 root.resizable(0,0)
 root.title("TowerMidi")
 root.poll = True
+
+## THREADING
+t = threading.Thread(target=worker)
+t.daemon = True
+t.start()
 
 ## GET DEVICES AND LIST IN DROPDOWN
 devicelist = []
