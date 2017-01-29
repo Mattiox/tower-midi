@@ -1,9 +1,14 @@
 import pygame.midi
 import sys
 import Tkinter as tk
-import keypress
 import threading
 import Queue
+import os
+
+if os.name == "nt":
+	import winkeypress
+else:
+	import keypress
 
 q = Queue.Queue()
 
@@ -11,7 +16,7 @@ q = Queue.Queue()
 def worker():
 	while True:
 		item = q.get()
-		keypress.keys(str(item))
+		winkeypress.keys(str(item))
 		q.task_done()
 
 def midiloop():
