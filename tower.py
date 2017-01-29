@@ -20,9 +20,9 @@ def midiloop():
 		if inp.poll():
 			rawkey = inp.read(1000)
 			#print(rawkey)
-			if str(rawkey[0][0][0]) == "144":
+			#print(rawkey[0][0][2]) <-- VELOCITY
+			if str(rawkey[0][0][0]) == "144" and int(rawkey[0][0][2]) > 0:
 				q.put(rawkey[0][0][1])
-				#keypress.keys(str(rawkey[0][0][1]))
 		pygame.time.wait(1)
 		root.after(0, midiloop)
 	else:
@@ -38,7 +38,7 @@ def enablebutton(dev):
 	global selecteddevice
 	startbutton.config(state = 'normal')
 	selecteddevice = dev[0]
-
+	
 def quitprogram():
 	pygame.quit()
 	sys.exit()
@@ -47,7 +47,7 @@ def quitprogram():
 pygame.init()
 pygame.midi.init()
 root = tk.Tk()
-root.geometry('330x30')
+root.geometry('300x30')
 root.resizable(0,0)
 root.title("TowerMidi")
 root.poll = True
