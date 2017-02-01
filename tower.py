@@ -6,7 +6,7 @@ import Queue
 import os
 
 if os.name == "nt":
-	import winkeypress
+	import winkeypress as keypress
 else:
 	import keypress
 
@@ -16,7 +16,7 @@ q = Queue.Queue()
 def worker():
 	while True:
 		item = q.get()
-		winkeypress.keys(str(item))
+		keypress.keys(str(item))
 		q.task_done()
 
 def midiloop():
