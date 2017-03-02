@@ -24,7 +24,6 @@ def midiloop():
 		keys = []
 		if inp.poll():
 			rawkey = inp.read(1000)
-			#print(rawkey)
 			#print(rawkey[0][0][2]) <-- VELOCITY
 			if str(rawkey[0][0][0]) == "144" and int(rawkey[0][0][2]) > 0:
 				q.put(rawkey[0][0][1])
@@ -44,6 +43,16 @@ def enablebutton(dev):
 	startbutton.config(state = 'normal')
 	selecteddevice = dev[0]
 	
+def setqwerty():
+	qwertzbutton.config(state = 'normal', bg='#ff5050')
+	qwertybutton.config(state = 'disabled', bg='#99ff66')
+	keypress.setqwerty()
+
+def setqwertz():
+	qwertybutton.config(state = 'normal', bg='#ff5050')
+	qwertzbutton.config(state = 'disabled', bg='#99ff66')
+	keypress.setqwertz()
+	
 def quitprogram():
 	pygame.quit()
 	sys.exit()
@@ -52,9 +61,9 @@ def quitprogram():
 pygame.init()
 pygame.midi.init()
 root = tk.Tk()
-root.geometry('300x30')
+root.geometry('350x60')
 root.resizable(0,0)
-root.title("TowerMidi")
+root.title("TowerMidi - by Mattio")
 root.poll = True
 
 ## THREADING
@@ -72,13 +81,26 @@ for dev in range( 0, pygame.midi.get_count() ):
 devices = tk.StringVar(root)
 devices.set('SELECT A MIDI DEVICE')
 devdrop = tk.OptionMenu(root, devices, *devicelist, command=enablebutton)
-devdrop.pack(side='left')
+devdrop.config(width=20)
+devdrop.grid(row=0, column=0, sticky="W")
 
 ## BUTTONS
 quitbutton = tk.Button(root, text="QUIT", command=quitprogram)
-quitbutton.pack(side = 'right',)
+quitbutton.grid(row=1, column=1, sticky="E")
 
 startbutton = tk.Button(root, text="START", state='disabled', command=callback)
-startbutton.pack(side = 'right')
+startbutton.grid(row=0, column=1, sticky="E")
 
+if os.name == 'nt':
+	qwertybutton = tk.Button(root, text="QWERTY", state='disabled', bg='#99ff66',command=setqwerty)
+	qwertybutton.config(disabledforeground='black')
+	qwertybutton.grid(row=1, column=0, sticky="W")
+	keypress.setqwerty()
+
+	qwertzbutton = tk.Button(root, text="QWERTZ", bg='#ff5050', command=setqwertz)
+	qwertzbutton.config(disabledforeground='black')
+	qwertzbutton.grid(row=1, column=0, sticky="E")
+else:
+	keypress.setqwerty()
 root.mainloop()
+
