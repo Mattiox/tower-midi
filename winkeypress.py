@@ -7,51 +7,65 @@ SendInput = ctypes.windll.user32.SendInput
 # C struct redefinitions 
 PUL = ctypes.POINTER(ctypes.c_ulong)
 class KeyBdInput(ctypes.Structure):
-    _fields_ = [("wVk", ctypes.c_ushort),
-                ("wScan", ctypes.c_ushort),
-                ("dwFlags", ctypes.c_ulong),
-                ("time", ctypes.c_ulong),
-                ("dwExtraInfo", PUL)]
+	_fields_ = [("wVk", ctypes.c_ushort),
+				("wScan", ctypes.c_ushort),
+				("dwFlags", ctypes.c_ulong),
+				("time", ctypes.c_ulong),
+				("dwExtraInfo", PUL)]
 
 class HardwareInput(ctypes.Structure):
-    _fields_ = [("uMsg", ctypes.c_ulong),
-                ("wParamL", ctypes.c_short),
-                ("wParamH", ctypes.c_ushort)]
+	_fields_ = [("uMsg", ctypes.c_ulong),
+				("wParamL", ctypes.c_short),
+				("wParamH", ctypes.c_ushort)]
 
 class MouseInput(ctypes.Structure):
-    _fields_ = [("dx", ctypes.c_long),
-                ("dy", ctypes.c_long),
-                ("mouseData", ctypes.c_ulong),
-                ("dwFlags", ctypes.c_ulong),
-                ("time",ctypes.c_ulong),
-                ("dwExtraInfo", PUL)]
+	_fields_ = [("dx", ctypes.c_long),
+				("dy", ctypes.c_long),
+				("mouseData", ctypes.c_ulong),
+				("dwFlags", ctypes.c_ulong),
+				("time",ctypes.c_ulong),
+				("dwExtraInfo", PUL)]
 
 class Input_I(ctypes.Union):
-    _fields_ = [("ki", KeyBdInput),
-                 ("mi", MouseInput),
-                 ("hi", HardwareInput)]
+	_fields_ = [("ki", KeyBdInput),
+				("mi", MouseInput),
+				("hi", HardwareInput)]
 
 class Input(ctypes.Structure):
-    _fields_ = [("type", ctypes.c_ulong),
-                ("ii", Input_I)]
+	_fields_ = [("type", ctypes.c_ulong),
+				("ii", Input_I)]
 
 def PressKey(hexKeyCode):
-    extra = ctypes.c_ulong(0)
-    ii_ = Input_I()
-    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra) )
-    x = Input( ctypes.c_ulong(1), ii_ )
-    ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+	extra = ctypes.c_ulong(0)
+	ii_ = Input_I()
+	ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra) )
+	x = Input( ctypes.c_ulong(1), ii_ )
+	ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 def ReleaseKey(hexKeyCode):
-    extra = ctypes.c_ulong(0)
-    ii_ = Input_I()
-    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
-    x = Input( ctypes.c_ulong(1), ii_ )
-    ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+	extra = ctypes.c_ulong(0)
+	ii_ = Input_I()
+	ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
+	x = Input( ctypes.c_ulong(1), ii_ )
+	ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+
+def setqwerty():
+	global key_y
+	global key_z
+	key_y = 0x15
+	key_z = 0x2C
+
+def setqwertz():
+	global key_y
+	global key_z
+	key_y = 0x2C
+	key_z = 0x15
 
 k = PyKeyboard()
 
 def keys(note):
+	global key_y
+	global key_z
 	if note == '36':
 		k.type_string('1')
 	elif note == '37':
@@ -149,12 +163,14 @@ def keys(note):
 		ReleaseKey(0x14)
 		ReleaseKey(0x2A)
 	elif note == '62':	
-		k.type_string('y')
+		PressKey(key_y)
+		time.sleep(0.05)
+		ReleaseKey(key_y)
 	elif note == '63':
 		PressKey(0x2A)
-		PressKey(0x15)
+		PressKey(key_y)
 		time.sleep(0.05)
-		ReleaseKey(0x15)
+		ReleaseKey(key_y)
 		ReleaseKey(0x2A)
 	elif note == '64':	
 		k.type_string('u')
@@ -237,12 +253,14 @@ def keys(note):
 		ReleaseKey(0x26)
 		ReleaseKey(0x2A)
 	elif note == '86':	
-		k.type_string('z')
+		PressKey(key_z)
+		time.sleep(0.05)
+		ReleaseKey(key_z)
 	elif note == '87':
 		PressKey(0x2A)
-		PressKey(0x2C)
+		PressKey(key_z)
 		time.sleep(0.05)
-		ReleaseKey(0x2C)
+		ReleaseKey(key_z)
 		ReleaseKey(0x2A)
 	elif note == '88':	
 		k.type_string('x')
