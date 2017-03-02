@@ -1,9 +1,18 @@
 from pykeyboard import PyKeyboard
 import time
 
+
+def setqwerty():
+	global key_y
+	global key_z
+	key_y = "y"
+	key_z = "z"
+
 k = PyKeyboard()
 
 def keys(note):
+	global key_y
+	global key_z
 	if note == '36':
 		k.type_string('1')
 	elif note == '37':
@@ -101,13 +110,13 @@ def keys(note):
 		k.release_key(k.shift_key)
 		k.release_key('t')
 	elif note == '62':	
-		k.type_string('y')
+		k.type_string(key_y)
 	elif note == '63':
 		k.press_key(k.shift_key)
-		k.press_key('y')
+		k.press_key(key_y)
 		time.sleep(0.05)
 		k.release_key(k.shift_key)
-		k.release_key('y')
+		k.release_key(key_y)
 	elif note == '64':	
 		k.type_string('u')
 	elif note == '65':	
@@ -189,13 +198,13 @@ def keys(note):
 		k.release_key(k.shift_key)
 		k.release_key('l')
 	elif note == '86':	
-		k.type_string('z')
+		k.type_string(key_z)
 	elif note == '87':
 		k.press_key(k.shift_key)
-		k.press_key('z')
+		k.press_key(key_z)
 		time.sleep(0.05)
 		k.release_key(k.shift_key)
-		k.release_key('z')
+		k.release_key(key_z)
 	elif note == '88':	
 		k.type_string('x')
 	elif note == '89':	
