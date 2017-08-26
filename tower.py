@@ -44,7 +44,7 @@ def callback():
 	devdrop.config(state = 'disabled')
 	qwertybutton.config(state = 'disabled')
 	qwertzbutton.config(state = 'disabled')
-	root.update_idletasks()
+	root.update()
 	print("Device: " + selecteddevice)
 	inp = pygame.midi.Input(int(selecteddevice))
 	midiloop()
