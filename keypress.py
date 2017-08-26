@@ -8,6 +8,12 @@ def setqwerty():
 	key_y = "y"
 	key_z = "z"
 
+def setqwertz():
+	global key_y
+	global key_z
+	key_y = "z"
+	key_z = "y"
+
 k = PyKeyboard()
 
 def keys(note):
